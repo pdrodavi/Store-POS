@@ -1,14 +1,26 @@
-FROM node:10.15.0
+FROM node:14.16
 
-LABEL version="1.0" description="Imagem feita com o intuito de rodar o ElectronJS v4.0.0 através de container" maintainer="Italo Bruno <rt.italo.bruno.silva@gmail.com>" 
+LABEL RUN="podman run -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -v $(pwd)/src:/app/src --rm -it electron-wrapper bash"
 
-RUN apt-get update && \
-    apt-get install -y build-essential clang libdbus-1-dev libgtk-3-dev \
-                       libnotify-dev libgnome-keyring-dev libgconf2-dev \
-                       libasound2-dev libcap-dev libcups2-dev libxtst-dev \
-                       libxss1 libnss3-dev gcc-multilib g++-multilib curl \
-                       gperf bison python-dbusmock
+RUN apt-get update && apt-get install \
+    git libx11-xcb1 libxcb-dri3-0 libxtst6 libnss3 libatk-bridge2.0-0 libgtk-3-0 libxss1 libasound2 \
+    -yq --no-install-suggests --no-install-recommends \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g electron@4.0.0 --unsafe-perm=true
+WORKDIR /app
+COPY . .
+RUN chown -R node /app
 
-CMD ["/usr/local/lib/node_modules/electron/dist/electron"]
+USER node
+RUN npm install
+RUN npx electron-rebuild
+
+# Electron needs root for sand boxing
+# see https://github.com/electron/electron/issues/17972
+USER root
+RUN chown root /app/node_modules/electron/dist/chrome-sandbox
+RUN chmod 4755 /app/node_modules/electron/dist/chrome-sandbox
+
+# Electron doesn't like to run as root
+USER node
+CMD bash
