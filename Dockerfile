@@ -1,6 +1,6 @@
 FROM node:14.16
 
-LABEL RUN="podman run -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -v $(pwd)/src:/app/src --rm -it electron-wrapper bash"
+LABEL RUN="podman run -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -v $(pwd):/app/src --rm -it electron-wrapper bash"
 
 RUN apt-get update && apt-get install \
     git libx11-xcb1 libxcb-dri3-0 libxtst6 libnss3 libatk-bridge2.0-0 libgtk-3-0 libxss1 libasound2 \
