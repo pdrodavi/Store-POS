@@ -4,7 +4,7 @@
   "description": "Store Point of Sale is a desktop application developed by Hosting Domain and available for free download at www.storepointofsale.com.",
   "author": "Hosting Domain",
   "private": true,
-  "main": "start.js",
+  "main": "src/main.js",
   "build": {
     "appId": "01",
     "directories": {
@@ -40,6 +40,7 @@
     "xmlhttprequest": "^1.8.0"
   },
   "scripts": {
+    "start": "electron . --no-sandbox",
     "electron": "cross-env NODE_ENV=dev nodemon --exec \"\"electron .\"\"",
     "electron-build": "electron-builder",
     "package-win": "electron-packager . POS --overwrite --asar=false --platform=win32 --arch=x64 --icon=assets/images/icon.ico --prune=true --out=release-builds --version-string.ProductName=\"POS\""
@@ -60,6 +61,9 @@
     "cross-env": "^6.0.3",
     "electron-builder": "^21.2.0",
     "electron-is-dev": "^1.1.0",
-    "nodemon": "^1.19.3"
+    "nodemon": "^1.19.3",
+    "electron": "^13.1.7",
+    "electron-rebuild": "^2.3.5",
+    "libxmljs": "^0.19.7"
   }
 }
